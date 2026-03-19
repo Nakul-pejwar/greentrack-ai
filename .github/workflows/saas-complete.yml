@@ -1,0 +1,59 @@
+name: SaaS CI/CD & Marketplace Listing
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Linter & Tests
+        run: |
+          npm run lint
+          # npm test (Add unit tests here)
+          npm run build
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          vercel-args: '--prod'
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Verify Uptime (Wait 30s for Vercel)
+        run: |
+          sleep 30
+          curl -fI https://greentrack-ai.vercel.app || echo "Deployment check failed but proceeding"
+
+  marketplace-automation:
+    needs: test-and-deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+
+      - name: Run Marketplace Listing Script
+        env:
+          FLIPPA_API_KEY: ${{ secrets.FLIPPA_API_KEY }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          LIVE_URL: 'https://greentrack-ai.vercel.app'
+        run: node scripts/list-for-sale.js

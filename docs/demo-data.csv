@@ -1,0 +1,11 @@
+date,facility_id,energy_type,kwh_used,travel_type,distance_km,waste_kg,cost_inr
+2026-01-01,FAC-1001,Grid Electricity,15000,,,300,120000
+2026-01-01,FAC-1001,,,Business Air Travel,4500,,45000
+2026-01-02,FAC-1002,Diesel Generator,400,,,15,8000
+2026-01-03,FAC-1001,,,Fleet Logistics,1200,,24000
+2026-01-05,FAC-1003,Solar PPA,8000,,,50,45000
+2026-01-10,FAC-1001,,,Employee Commute,3000,,0
+2026-01-15,FAC-1002,Grid Electricity,12000,,,250,96000
+2026-02-01,FAC-1001,Grid Electricity,14500,,,280,116000
+2026-02-05,FAC-1001,,,Business Air Travel,5000,,50000
+2026-02-12,FAC-1003,Solar PPA,8200,,,45,46125
